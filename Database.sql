@@ -109,7 +109,7 @@ CREATE TABLE public.histories (
     id int4 NOT NULL,
     user_id int4 NULL,
     movie_id int4 NULL,
-    watching_time date NULL,
+    watching_time int4 NULL,
     is_completed bool NULL,
     CONSTRAINT history_pkey PRIMARY KEY (id),
     CONSTRAINT history_movieid_fkey FOREIGN KEY (movie_id) REFERENCES public.movies(id),
