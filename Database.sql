@@ -67,7 +67,6 @@ CREATE TABLE public.movies (
     duration int4 NOT NULL,
     stream_start_date date NOT NULL,
     stream_end_date date NOT NULL,
-    available_for_streaming bool NULL,
     CONSTRAINT movie_pkey PRIMARY KEY (id),
     CONSTRAINT movie_director_id_fkey FOREIGN KEY (director_id) REFERENCES public.directors(id)
 );
