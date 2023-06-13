@@ -1,61 +1,109 @@
 -- query to see if the movie available for streaming
 Select
-    Movie.Title,
-    Stream.Start_Date,
-    Stream.End_Date
+    movies.title
 From
-    Movie
-    Join Movie_Stream On Movie.MovieID = Movie_Stream.MovieID
-    Join Stream On Movie_Stream.StreamID = Stream.StreamID -- query to see average user rating for all the movies he/she has rated
+    movies
+Where
+    current_date between movies.stream_start_date
+    and movies.stream_end_date;
+
+-- query to see average user rating for all the movies he/she has rated
 Select
-    Users.Name,
-    Avg(Review.Rating)
+    users.name,
+    Avg(reviews.rating)
 From
-    Users
-    Join Review On Users.UserID = Review.UserID
+    users
+    Join reviews On users.id = reviews.user_id
 Group By
-    Users.Name;
+    users.name;
+
+-- query to see all movies has been rated by a particular user
+Select
+    users.name,
+    movies.title,
+    reviews.rating
+From
+    users
+    Join reviews On users.id = reviews.user_id
+    Join movies On reviews.movie_id = movies.id
+Group By
+    users.name,
+    movies.title,
+    reviews.rating;
+
+-- query to see list of movies with their average rating
+Select
+    movies.title,
+    Avg(reviews.rating)
+From
+    movies
+    Join reviews On movies.id = reviews.movie_id
+Group By
+    movies.title;
 
 -- query to see the average rating for a particular movie
 Select
-    Movie.Title,
-    Avg(Review.Rating)
+    movies.title,
+    Avg(reviews.rating)
 From
-    Movie
-    Join Review On Movie.MovieID = Review.MovieID
+    movies
+    Join reviews On movies.id = reviews.movie_id
 Group By
-    Movie.Title;
+    movies.title
+Having
+    movies.title = 'Harry Potter';
 
 -- query to see the reviews for particular user on movie
 Select
-    Users.Name,
-    Movie.Title,
-    Review.Review
+    users.name,
+    movies.title,
+    reviews.rating,
+    reviews.review
 From
-    Users
-    Join Review On Users.UserID = Review.UserID
-    Join Movie On Review.MovieID = Movie.MovieID
-Group By
-    Users.Name,
-    Movie.Title;
+    users
+    Join reviews On users.id = reviews.user_id
+    Join movies On reviews.movie_id = movies.id
+Where
+    users.name = 'John';
 
 -- query to see the reviews for a particular movie by all users
 Select
-    Movie.Title,
-    Users.Name,
-    Review.Review
+    users.name,
+    movies.title,
+    reviews.rating,
+    reviews.review
 From
-    Movie
-    Join Review On Movie.MovieID = Review.MovieID
-    Join Users On Review.UserID = Users.UserID
-Group By
-    Movie.Title,
-    Users.Name;
-
--- change the isCompleted to true if the user has completed watching the movie if the duration is equal to the watching time
-Update
-    History
-Set
-    isCompleted = true
+    users
+    Join reviews On users.id = reviews.user_id
+    Join movies On reviews.movie_id = movies.id
 Where
-    Duration = Watching_time;
+    movies.title = 'Harry Potter';
+
+-- change the isCompleted to true if the user has completed watching the movie if the movie duration is equal to the watching time
+Update
+    histories
+Set
+    is_completed = true
+From
+    histories
+    Join movies On histories.movie_id = movies.id
+Where
+    movies.duration = histories.watching_time;
+
+--create a list of directors with all of their movies, including the reviews and the user information for every review and the entire history of the user (for all movies)
+Select
+    directors.name,
+    movies.title,
+    reviews.rating,
+    reviews.review,
+    users.name,
+    users.email,
+    users.mobile,
+    histories.watching_time,
+    histories.is_completed
+From
+    directors
+    Join movies On directors.id = movies.director_id
+    Join reviews On movies.id = reviews.movie_id
+    Join users On reviews.user_id = users.id
+    Join histories On users.id = histories.user_id;
