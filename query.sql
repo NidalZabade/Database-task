@@ -1,3 +1,10 @@
+-- indexes for tables
+Create Index idx_movies_id On movies (id);
+Create Index idx_directors_id On directors (id);
+Create Index idx_users_id On users (id);
+Create Index idx_reviews_id On reviews (id);
+Create Index idx_histories_id On histories (id);
+
 -- query to see if the movie available for streaming
 Select
     movies.title
@@ -107,3 +114,4 @@ From
     Join reviews On movies.id = reviews.movie_id
     Join users On reviews.user_id = users.id
     Join histories On users.id = histories.user_id;
+
